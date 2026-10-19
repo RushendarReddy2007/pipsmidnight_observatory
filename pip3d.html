@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="night">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meet Pip in 360° · Midnight Observatory</title>
+  <link rel="icon" type="image/png" href="assets/icon-64.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Quicksand:wght@400;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #04040f;
+      --gold: #fbbf24;
+      --purple: #a78bfa;
+      --pink: #f9a8d4;
+      --cream: #f5f0ff;
+    }
+
+    html, body {
+      width: 100%; height: 100%;
+      background: var(--bg);
+      color: var(--cream);
+      font-family: 'Fredoka', 'Quicksand', sans-serif;
+      overflow: hidden;
+      user-select: none;
+    }
+
+    /* ─── SKY BACKGROUND ───────────────────────────────────────── */
+    .sky-bg {
+      position: fixed; inset: 0;
+      background: radial-gradient(ellipse at 50% 35%, #180d38 0%, #070518 60%, #020208 100%);
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    /* Stars & glowing nebulae */
+    .ambient-glow {
+      position: absolute;
+      width: 500px; height: 500px;
+      left: 50%; top: 48%;
+      transform: translate(-50%, -50%);
+      background: radial-gradient(circle, rgba(251,191,36,0.18) 0%, rgba(139,92,246,0.15) 45%, transparent 70%);
+      border-radius: 50%;
+      animation: aura-pulse 4s ease-in-out infinite alternate;
+    }
+
+    @keyframes aura-pulse {
+      0% { transform: translate(-50%, -50%) scale(0.95); opacity: 0.7; }
+      100% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
+    }
+
+    /* ─── HEADER ───────────────────────────────────────────────── */
+    #top-bar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+      height: 56px;
+      background: rgba(4,4,15,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(167,139,250,0.2);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 1.5rem;
+    }
+    #top-bar .brand { display:flex; align-items:center; gap:.6rem; text-decoration:none; color:var(--cream); }
+    #top-bar .brand-name { font-size:1.1rem; font-weight:700; color: #fbbf24; }
+    #top-bar .back-btn {
+      display: flex; align-items: center; gap: .5rem;
+      padding: .4rem 1.1rem; border-radius: 20px;
+      background: rgba(167,139,250,0.15); border: 1.5px solid rgba(167,139,250,0.4);
+      color: var(--purple); font-family: 'Fredoka',sans-serif; font-size:.9rem;
+      cursor: pointer; transition: all .2s ease; text-decoration: none;
+    }
+    #top-bar .back-btn:hover { background: rgba(167,139,250,0.28); color:#fff; }
+
+    /* ─── MAIN 3D VIDEO CONTAINER ──────────────────────────────── */
+    #pip-stage-container {
+      position: fixed; inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      pointer-events: none;
+    }
+
+    .video-viewport {
+      position: relative;
+      width: min(85vw, 480px);
+      max-height: 65vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      pointer-events: auto;
+      cursor: grab;
+      touch-action: none;
+    }
+    .video-viewport:active {
+      cursor: grabbing;
+    }
+
+    #main-pip-video {
+      width: 100%;
+      height: auto;
+      max-height: 60vh;
+      object-fit: contain;
+      border-radius: 20px;
+      filter: drop-shadow(0 0 35px rgba(251,191,36,0.6))
+              drop-shadow(0 0 75px rgba(139,92,246,0.4))
+              drop-shadow(0 15px 40px rgba(0,0,0,0.85));
+      transition: transform 0.05s linear;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    /* Plinth / Cloud Pedestal Graphic under video */
+    .stage-pedestal {
+      position: absolute;
+      bottom: -15px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80%;
+      height: 35px;
+      background: radial-gradient(ellipse at 50% 50%, rgba(251,191,36,0.4) 0%, rgba(139,92,246,0.15) 60%, transparent 80%);
+      border-radius: 50%;
+      pointer-events: none;
+      filter: blur(4px);
+    }
+
+    /* ─── OVERLAY UI ─────────────────────────────────────────── */
+    #overlay-ui {
+      position: fixed; inset: 0;
+      pointer-events: none;
+      z-index: 500;
+    }
+
+    /* Drag hint */
+    #drag-hint {
+      position: absolute; top: 76px; left: 50%;
+      transform: translateX(-50%);
+      background: rgba(13,10,46,0.85);
+      border: 1px solid rgba(251,191,36,0.4);
+      border-radius: 24px; padding: .45rem 1.4rem;
+      font-size: .9rem; color: #fbbf24;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+      display: flex; align-items: center; gap: .5rem;
+    }
+
+    /* Angle badge */
+    #angle-badge {
+      position: absolute;
+      bottom: 165px; left: 50%;
+      transform: translateX(-50%);
+      background: rgba(13,10,46,0.9);
+      border: 1.5px solid rgba(251,191,36,0.5);
+      border-radius: 20px; padding: .35rem 1.1rem;
+      font-family: 'Space Mono', monospace; font-size: .85rem;
+      color: var(--gold); letter-spacing: 2px;
+      box-shadow: 0 0 15px rgba(251,191,36,0.3);
+    }
+
+    /* Speech bubble */
+    #pip-speech {
+      position: absolute; top: 80px; right: 2rem;
+      max-width: 260px;
+      background: rgba(13,10,46,0.94);
+      border: 1.5px solid rgba(167,139,250,0.5);
+      border-radius: 18px 18px 4px 18px;
+      padding: .85rem 1.1rem;
+      font-size: .92rem; line-height: 1.4; color: var(--cream);
+      box-shadow: 0 4px 24px rgba(0,0,0,.6);
+      opacity: 0; transform: translateY(-8px);
+      transition: opacity .3s ease, transform .3s ease;
+      pointer-events: none;
+    }
+    #pip-speech.visible { opacity: 1; transform: translateY(0); }
+
+    /* Controls panel */
+    #controls-panel {
+      position: absolute; bottom: 1.8rem; left: 50%;
+      transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: .8rem;
+      pointer-events: all;
+      width: 100%;
+      max-width: 600px;
+      padding: 0 1rem;
+    }
+
+    /* Thumbnail strip */
+    #thumb-strip {
+      display: flex; gap: .5rem; align-items: center; justify-content: center;
+      flex-wrap: wrap;
+    }
+    .thumb-btn {
+      width: 52px; height: 52px; border-radius: 10px; overflow: hidden;
+      border: 2px solid rgba(167,139,250,0.3);
+      background: rgba(13,10,46,0.8);
+      cursor: pointer; transition: all .2s ease;
+      padding: 2px;
+    }
+    .thumb-btn img { width:100%; height:100%; object-fit:cover; border-radius:7px; }
+    .thumb-btn:hover { border-color: rgba(251,191,36,.7); transform: translateY(-3px); }
+    .thumb-btn.active { border-color: var(--gold); box-shadow: 0 0 14px rgba(251,191,36,.6); }
+
+    /* Action buttons row */
+    #action-row {
+      display: flex; gap: .6rem; align-items: center; justify-content: center;
+      flex-wrap: wrap;
+    }
+    .ctrl-btn {
+      display: flex; align-items: center; gap: .4rem;
+      padding: .5rem 1.1rem; border-radius: 24px;
+      font-family: 'Fredoka',sans-serif; font-size: .9rem; font-weight: 600;
+      cursor: pointer; transition: all .2s ease;
+      border: 1.5px solid rgba(167,139,250,0.4);
+      background: rgba(13,10,46,0.85);
+      color: var(--purple);
+      backdrop-filter: blur(8px);
+    }
+    .ctrl-btn:hover { background: rgba(167,139,250,0.25); color:#fff; transform: translateY(-2px); }
+    .ctrl-btn.gold { border-color: rgba(251,191,36,.5); color: var(--gold); }
+    .ctrl-btn.gold:hover { background: rgba(251,191,36,.18); }
+    .ctrl-btn.pink { border-color: rgba(249,168,212,.5); color: var(--pink); }
+    .ctrl-btn.active-spin { background: rgba(251,191,36,.25) !important; border-color: var(--gold) !important; color: var(--gold) !important; }
+
+    /* Nav chevrons */
+    #chevron-left, #chevron-right {
+      position: absolute; top: 48%; transform: translateY(-50%);
+      width: 56px; height: 56px; border-radius: 50%;
+      background: rgba(13,10,46,0.85);
+      border: 2px solid rgba(251,191,36,.5);
+      color: var(--gold); font-size: 2rem; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all .2s ease; pointer-events: all;
+      backdrop-filter: blur(8px);
+    }
+    #chevron-left { left: 1.5rem; }
+    #chevron-right { right: 1.5rem; }
+    #chevron-left:hover, #chevron-right:hover {
+      background: rgba(251,191,36,.25); transform: translateY(-50%) scale(1.1);
+      box-shadow: 0 0 20px rgba(251,191,36,0.5);
+    }
+
+    /* Mobile tweaks */
+    @media(max-width:600px) {
+      .thumb-btn { width:42px; height:42px; }
+      .ctrl-btn { padding:.4rem .8rem; font-size:.82rem; }
+      #chevron-left, #chevron-right { width:42px; height:42px; font-size:1.5rem; }
+      #chevron-left { left: 0.5rem; }
+      #chevron-right { right: 0.5rem; }
+      #angle-badge { bottom: 175px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Sky background -->
+<div class="sky-bg">
+  <div class="ambient-glow"></div>
+</div>
+
+<!-- Top bar -->
+<div id="top-bar">
+  <a href="index.html" class="brand">
+    <span style="color:#fbbf24;font-size:1.2rem;">✦</span>
+    <span class="brand-name">Pip's 360° Observatory</span>
+  </a>
+  <a href="index.html" class="back-btn">← Back to Dashboard</a>
+</div>
+
+<!-- Main 3D Pip Video Viewport -->
+<div id="pip-stage-container">
+  <div class="video-viewport" id="viewport">
+    <video
+      id="main-pip-video"
+      src="gemini_generated_video_73371d8f.mp4"
+      autoplay
+      loop
+      muted
+      playsinline
+      preload="auto"
+    ></video>
+    <div class="stage-pedestal"></div>
+  </div>
+</div>
+
+<!-- Overlay UI -->
+<div id="overlay-ui">
+  <div id="drag-hint">↔ Drag left/right to rotate Pip 360°</div>
+  <div id="angle-badge">↻ 360° · 0°</div>
+  <div id="pip-speech"></div>
+
+  <!-- Left / Right chevrons -->
+  <button id="chevron-left" title="Rotate left 45°">‹</button>
+  <button id="chevron-right" title="Rotate right 45°">›</button>
+
+  <!-- Bottom controls -->
+  <div id="controls-panel">
+    <div id="thumb-strip">
+      <button class="thumb-btn active" data-angle="0" title="Front (0°)"><img src="assets/pip_3d_character.png" alt="0°"></button>
+      <button class="thumb-btn" data-angle="51" title="Cozy 45°"><img src="assets/pip_thumb_0.png" alt="51°"></button>
+      <button class="thumb-btn" data-angle="102" title="Side Profile"><img src="assets/pip_thumb_1.png" alt="102°"></button>
+      <button class="thumb-btn" data-angle="154" title="Back Angle"><img src="assets/pip_thumb_2.png" alt="154°"></button>
+      <button class="thumb-btn" data-angle="205" title="Back View"><img src="assets/pip_thumb_3.png" alt="205°"></button>
+      <button class="thumb-btn" data-angle="257" title="Other Profile"><img src="assets/pip_thumb_4.png" alt="257°"></button>
+      <button class="thumb-btn" data-angle="308" title="Front Angle"><img src="assets/pip_thumb_5.png" alt="308°"></button>
+    </div>
+
+    <div id="action-row">
+      <button class="ctrl-btn gold" id="btn-prev">‹ Step Left</button>
+      <button class="ctrl-btn pink" id="btn-reset">↺ Reset View</button>
+      <button class="ctrl-btn gold" id="btn-next">Step Right ›</button>
+      <button class="ctrl-btn active-spin" id="btn-spin">⏸ Pause 360°</button>
+    </div>
+  </div>
+</div>
+
+<script>
+'use strict';
+
+const video = document.getElementById('main-pip-video');
+const viewport = document.getElementById('viewport');
+const angleBadge = document.getElementById('angle-badge');
+const btnSpin = document.getElementById('btn-spin');
+const btnPrev = document.getElementById('btn-prev');
+const btnNext = document.getElementById('btn-next');
+const btnReset = document.getElementById('btn-reset');
+const chevronLeft = document.getElementById('chevron-left');
+const chevronRight = document.getElementById('chevron-right');
+const thumbBtns = document.querySelectorAll('.thumb-btn');
+
+let currentAngle = 0;
+let isDragging = false;
+let startX = 0;
+let startAngle = 0;
+let autoSpin = true;
+
+const IMAGE_ANGLES = [0, 51, 102, 154, 205, 257, 308];
+
+function normalize(a) {
+  return ((a % 360) + 360) % 360;
+}
+
+function updateAngleDisplay(deg) {
+  const norm = Math.round(normalize(deg));
+  angleBadge.textContent = `↻ 360° · ${norm}°`;
+  
+  // Update active thumbnail
+  let activeIdx = 0;
+  for (let i = IMAGE_ANGLES.length - 1; i >= 0; i--) {
+    if (norm >= IMAGE_ANGLES[i]) {
+      activeIdx = i;
+      break;
+    }
+  }
+  thumbBtns.forEach((btn, idx) => {
+    btn.classList.toggle('active', idx === activeIdx);
+  });
+}
+
+function syncVideoToAngle(deg) {
+  if (!video.duration || isNaN(video.duration)) return;
+  const norm = normalize(deg);
+  const targetTime = (norm / 360) * video.duration;
+  video.currentTime = targetTime;
+}
+
+// Drag interactions
+function onDragStart(clientX) {
+  isDragging = true;
+  startX = clientX;
+  startAngle = currentAngle;
+  if (!video.paused) {
+    video.pause();
+  }
+  autoSpin = false;
+  updateSpinBtn();
+}
+
+function onDragMove(clientX) {
+  if (!isDragging) return;
+  const dx = clientX - startX;
+  currentAngle = startAngle + (dx * 0.7); // smooth rotation sensitivity
+  syncVideoToAngle(currentAngle);
+  updateAngleDisplay(currentAngle);
+}
+
+function onDragEnd() {
+  isDragging = false;
+}
+
+viewport.addEventListener('mousedown', (e) => onDragStart(e.clientX));
+window.addEventListener('mousemove', (e) => onDragMove(e.clientX));
+window.addEventListener('mouseup', onDragEnd);
+
+viewport.addEventListener('touchstart', (e) => onDragStart(e.touches[0].clientX), { passive: true });
+window.addEventListener('touchmove', (e) => onDragMove(e.touches[0].clientX), { passive: true });
+window.addEventListener('touchend', onDragEnd);
+
+// Keep video looping or scrub updating
+video.addEventListener('timeupdate', () => {
+  if (!isDragging && !video.paused && video.duration) {
+    currentAngle = (video.currentTime / video.duration) * 360;
+    updateAngleDisplay(currentAngle);
+  }
+});
+
+function updateSpinBtn() {
+  btnSpin.textContent = autoSpin ? '⏸ Pause 360°' : '▶ Auto Spin';
+  btnSpin.classList.toggle('active-spin', autoSpin);
+}
+
+btnSpin.addEventListener('click', () => {
+  autoSpin = !autoSpin;
+  if (autoSpin) {
+    video.play().catch(()=>{});
+  } else {
+    video.pause();
+  }
+  updateSpinBtn();
+});
+
+btnReset.addEventListener('click', () => {
+  currentAngle = 0;
+  syncVideoToAngle(0);
+  updateAngleDisplay(0);
+  autoSpin = true;
+  video.play().catch(()=>{});
+  updateSpinBtn();
+  showSpeech('"Back to the beginning! ✨"');
+});
+
+function stepAngle(delta) {
+  if (!video.paused) video.pause();
+  autoSpin = false;
+  updateSpinBtn();
+  currentAngle = normalize(currentAngle + delta);
+  syncVideoToAngle(currentAngle);
+  updateAngleDisplay(currentAngle);
+}
+
+btnPrev.addEventListener('click', () => stepAngle(-45));
+btnNext.addEventListener('click', () => stepAngle(45));
+chevronLeft.addEventListener('click', () => stepAngle(-45));
+chevronRight.addEventListener('click', () => stepAngle(45));
+
+thumbBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    if (!video.paused) video.pause();
+    autoSpin = false;
+    updateSpinBtn();
+    const deg = parseFloat(btn.dataset.angle || '0');
+    currentAngle = deg;
+    syncVideoToAngle(deg);
+    updateAngleDisplay(deg);
+  });
+});
+
+/* Speech bubble */
+const speechEl = document.getElementById('pip-speech');
+let speechTimer = null;
+function showSpeech(text) {
+  speechEl.textContent = text;
+  speechEl.classList.add('visible');
+  clearTimeout(speechTimer);
+  speechTimer = setTimeout(() => speechEl.classList.remove('visible'), 3500);
+}
+
+setTimeout(() => {
+  showSpeech('"Hewwo! I am Pip! Watch my full 3D rotation! ✨"');
+}, 800);
+</script>
+</body>
+</html>

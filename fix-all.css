@@ -1,0 +1,481 @@
+/**
+ * FIX-ALL.CSS — Pip's Midnight Observatory
+ * Overrides and fixes for all reported issues
+ */
+
+/* ═══════════════════════════════════════════════════════════════
+   1. CURSOR SPARKLES — pointer style
+   ═══════════════════════════════════════════════════════════════ */
+.pip-sparkle-particle {
+  position: fixed;
+  pointer-events: none;
+  z-index: 999999;
+  font-size: 12px;
+  line-height: 1;
+  animation: pip-sparkle-rise 0.85s ease-out forwards;
+  transform-origin: center;
+  will-change: transform, opacity;
+}
+
+@keyframes pip-sparkle-rise {
+  0%   { opacity: 1; transform: translateY(0) scale(1) rotate(0deg); }
+  60%  { opacity: 0.8; transform: translateY(-35px) scale(1.2) rotate(180deg); }
+  100% { opacity: 0; transform: translateY(-65px) scale(0.3) rotate(360deg); }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   2. 360° STAGE — atmospheric, cinematic look
+   ═══════════════════════════════════════════════════════════════ */
+.companion-stage-card,
+.companion-stage-card.v2 {
+  background: radial-gradient(ellipse at 50% 30%, #1e1050 0%, #0d0a2e 40%, #050418 100%) !important;
+  border: none !important;
+  box-shadow: 0 0 80px rgba(139, 92, 246, 0.25), 0 0 160px rgba(167, 139, 250, 0.1) !important;
+  border-radius: 28px !important;
+  overflow: hidden !important;
+  position: relative !important;
+}
+
+/* Make Pip image BIGGER and more cinematic */
+#companion-pip-img,
+.companion-pip-img {
+  width: clamp(280px, 75%, 430px) !important;
+  max-height: 480px !important;
+  object-fit: contain !important;
+  filter: drop-shadow(0 0 30px rgba(251, 191, 36, 0.55))
+          drop-shadow(0 0 60px rgba(139, 92, 246, 0.35))
+          drop-shadow(0 12px 40px rgba(0,0,0,0.7)) !important;
+  transition: filter 0.3s ease !important;
+  display: block !important;
+  margin: 0 auto !important;
+}
+
+/* Rotation rig — perspective 3D */
+#companion-rig,
+.companion-rig {
+  transform-style: preserve-3d !important;
+  perspective: 1200px !important;
+  will-change: transform !important;
+  cursor: grab !important;
+  transition: none !important; /* JS handles smoothness */
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  position: relative !important;
+}
+
+#companion-rig:active,
+.companion-rig:active {
+  cursor: grabbing !important;
+}
+
+/* Glow aura behind Pip */
+.stage-glow-aura {
+  position: absolute !important;
+  width: 360px !important;
+  height: 360px !important;
+  left: 50% !important;
+  top: 50% !important;
+  transform: translate(-50%, -55%) !important;
+  background: radial-gradient(ellipse, rgba(251,191,36,0.18) 0%, rgba(139,92,246,0.12) 45%, transparent 70%) !important;
+  border-radius: 50% !important;
+  pointer-events: none !important;
+  z-index: 0 !important;
+  animation: pip-aura-pulse 3s ease-in-out infinite !important;
+}
+
+@keyframes pip-aura-pulse {
+  0%, 100% { opacity: 0.7; transform: translate(-50%, -55%) scale(1); }
+  50%       { opacity: 1;   transform: translate(-50%, -55%) scale(1.08); }
+}
+
+/* Atmospheric clouds */
+.stage-bg-cloud {
+  position: absolute !important;
+  background: radial-gradient(ellipse, rgba(139,92,246,0.22) 0%, transparent 70%) !important;
+  border-radius: 50% !important;
+  pointer-events: none !important;
+  z-index: 1 !important;
+  animation: cloud-drift 6s ease-in-out infinite !important;
+}
+
+.stage-cloud-1 { width:260px; height:120px; top:15%;  left:-60px;  animation-delay:0s; }
+.stage-cloud-2 { width:200px; height:90px;  bottom:20%; right:-40px; animation-delay:1.5s; }
+.stage-cloud-3 { width:180px; height:80px;  bottom:8%;  left:10%;    animation-delay:3s; }
+.stage-cloud-4 { width:140px; height:70px;  top:25%;  right:5%;    animation-delay:2s; }
+
+@keyframes cloud-drift {
+  0%,100% { transform: translateX(0) translateY(0); }
+  50%      { transform: translateX(10px) translateY(-8px); }
+}
+
+/* Crescent moon */
+.stage-crescent-moon {
+  position: absolute !important;
+  top: 16px !important;
+  right: 20px !important;
+  font-size: 3.2rem !important;
+  z-index: 10 !important;
+  filter: drop-shadow(0 0 16px rgba(251,191,36,0.8)) !important;
+  animation: moon-glow 4s ease-in-out infinite !important;
+  pointer-events: none !important;
+}
+
+@keyframes moon-glow {
+  0%,100% { filter: drop-shadow(0 0 16px rgba(251,191,36,0.8)); }
+  50%      { filter: drop-shadow(0 0 28px rgba(251,191,36,1)); }
+}
+
+/* Scattered stars */
+.stage-scatter-star {
+  position: absolute !important;
+  color: #fbbf24 !important;
+  z-index: 10 !important;
+  pointer-events: none !important;
+  animation: star-twinkle 2s ease-in-out infinite !important;
+}
+.s-star-1  { top:10%; left:12%; font-size:1.1rem; animation-delay:0s; }
+.s-star-2  { top:20%; left:70%; font-size:0.8rem; animation-delay:0.4s; }
+.s-star-3  { top:5%;  left:40%; font-size:1.3rem; animation-delay:0.8s; }
+.s-star-4  { top:60%; left:8%;  font-size:0.7rem; animation-delay:1.2s; }
+.s-star-5  { top:35%; right:8%; font-size:1.5rem; animation-delay:0.6s; }
+.s-star-6  { bottom:30%; left:5%; font-size:0.9rem; animation-delay:1s; }
+.s-star-7  { top:8%;  right:30%; font-size:0.6rem; animation-delay:1.4s; }
+.s-star-8  { bottom:15%; right:15%; font-size:1rem; animation-delay:0.2s; }
+.s-star-9  { top:45%; left:15%; font-size:0.75rem; animation-delay:1.8s; }
+
+@keyframes star-twinkle {
+  0%,100% { opacity:0.4; transform:scale(1); }
+  50%      { opacity:1;   transform:scale(1.3); }
+}
+
+/* Cloud plinth */
+.companion-plinth {
+  background: linear-gradient(180deg, rgba(255,255,255,0.12) 0%, rgba(139,92,246,0.08) 100%) !important;
+  backdrop-filter: blur(8px) !important;
+  border: 1px solid rgba(255,255,255,0.15) !important;
+  border-radius: 50% !important;
+  box-shadow: 0 4px 32px rgba(139,92,246,0.25), 0 0 0 2px rgba(251,191,36,0.15) !important;
+}
+
+/* Plinth glow ring animation */
+.plinth-glow-ring {
+  border: 2px solid rgba(251,191,36,0.5) !important;
+  animation: ring-spin 4s linear infinite !important;
+}
+
+@keyframes ring-spin {
+  0%   { transform: rotate(0deg); box-shadow: 0 0 12px rgba(251,191,36,0.4); }
+  50%  { box-shadow: 0 0 24px rgba(251,191,36,0.8); }
+  100% { transform: rotate(360deg); box-shadow: 0 0 12px rgba(251,191,36,0.4); }
+}
+
+/* Thumbnail strip */
+.angle-thumb-btn {
+  border: 2px solid rgba(167,139,250,0.3) !important;
+  border-radius: 10px !important;
+  overflow: hidden !important;
+  cursor: pointer !important;
+  transition: border-color 0.2s ease, transform 0.2s ease !important;
+  background: rgba(13,10,46,0.8) !important;
+  padding: 2px !important;
+}
+
+.angle-thumb-btn:hover {
+  border-color: rgba(251,191,36,0.6) !important;
+  transform: translateY(-3px) scale(1.05) !important;
+}
+
+.angle-thumb-btn.active {
+  border-color: #fbbf24 !important;
+  box-shadow: 0 0 12px rgba(251,191,36,0.5) !important;
+  transform: translateY(-2px) !important;
+}
+
+/* Stage nav arrows */
+.stage-nav-arrow {
+  position: absolute !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  z-index: 20 !important;
+  width: 50px !important;
+  height: 50px !important;
+  border-radius: 50% !important;
+  background: rgba(13,10,46,0.85) !important;
+  border: 2px solid rgba(251,191,36,0.5) !important;
+  color: #fbbf24 !important;
+  font-size: 1.6rem !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.arrow-left  { left: 10px !important; }
+.arrow-right { right: 10px !important; }
+
+.stage-nav-arrow:hover {
+  background: rgba(251,191,36,0.2) !important;
+  border-color: #fbbf24 !important;
+  box-shadow: 0 0 20px rgba(251,191,36,0.4) !important;
+  transform: translateY(-50%) scale(1.1) !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   3. DELIVERY ROUTES — Fix hover shaking
+   ═══════════════════════════════════════════════════════════════ */
+.map-node,
+.map-node g,
+.map-node circle,
+.delivery-route,
+.route-item,
+[class*='route'],
+[class*='node'] {
+  transition: none !important;
+  animation-timing-function: linear !important;
+}
+
+/* Allow only pulse animation, no transform on hover */
+.map-node:hover circle.node-core {
+  fill: rgba(251, 191, 36, 0.9) !important;
+  filter: none !important;
+  transform: none !important;
+}
+
+/* Remove any hover translate on route cards */
+.project-card:hover,
+.project-card-wide:hover {
+  transform: translateY(-4px) !important;
+  transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   4. NIGHTCAP BUTTONS
+   ═══════════════════════════════════════════════════════════════ */
+.accessory-chip {
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  border-radius: 20px !important;
+  padding: 0.35rem 0.75rem !important;
+  font-size: 0.82rem !important;
+  font-weight: 600 !important;
+  font-family: 'Fredoka', 'Quicksand', sans-serif !important;
+  border: 1.5px solid rgba(167,139,250,0.4) !important;
+  background: rgba(13,10,46,0.6) !important;
+  color: #c4b5fd !important;
+}
+
+.accessory-chip.active {
+  background: rgba(139,92,246,0.3) !important;
+  border-color: #a78bfa !important;
+  box-shadow: 0 0 10px rgba(139,92,246,0.3) !important;
+  color: #fff !important;
+}
+
+.accessory-chip:hover {
+  transform: translateY(-2px) !important;
+  border-color: #fbbf24 !important;
+  color: #fbbf24 !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   5. LULLABY CHIME KEYS — active state
+   ═══════════════════════════════════════════════════════════════ */
+.chime-key.key-active {
+  background: rgba(251,191,36,0.3) !important;
+  border-color: #fbbf24 !important;
+  box-shadow: 0 0 20px rgba(251,191,36,0.6) !important;
+  transform: translateY(-4px) scale(1.08) !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   6. LAUNCH DISPATCH MODAL
+   ═══════════════════════════════════════════════════════════════ */
+#pip-dispatch-modal {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 999990 !important;
+  background: rgba(5,4,20,0.92) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-family: 'Fredoka', 'Quicksand', sans-serif !important;
+}
+
+#pip-dispatch-modal .dispatch-inner {
+  background: linear-gradient(135deg, #1a0d3d, #0f0a2e) !important;
+  border: 2px solid rgba(251,191,36,0.4) !important;
+  border-radius: 24px !important;
+  padding: 2.5rem !important;
+  max-width: 500px !important;
+  width: 90% !important;
+  text-align: center !important;
+  box-shadow: 0 0 60px rgba(251,191,36,0.2) !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+#pip-dispatch-modal .rocket-anim {
+  font-size: 3rem !important;
+  display: inline-block !important;
+  animation: rocket-fly 1.5s ease-in-out infinite !important;
+  margin-bottom: 1rem !important;
+}
+
+@keyframes rocket-fly {
+  0%   { transform: translateY(0) rotate(-45deg); }
+  50%  { transform: translateY(-20px) rotate(-45deg); }
+  100% { transform: translateY(0) rotate(-45deg); }
+}
+
+#pip-dispatch-modal h3 {
+  color: #fbbf24 !important;
+  font-size: 1.6rem !important;
+  margin-bottom: 0.5rem !important;
+}
+
+#pip-dispatch-modal p {
+  color: #e2d9ff !important;
+  font-size: 1rem !important;
+  margin-bottom: 1.2rem !important;
+  line-height: 1.5 !important;
+}
+
+#pip-dispatch-modal .dispatch-route-path {
+  background: rgba(251,191,36,0.08) !important;
+  border: 1px solid rgba(251,191,36,0.25) !important;
+  border-radius: 12px !important;
+  padding: 0.8rem !important;
+  margin-bottom: 1.2rem !important;
+  font-size: 0.9rem !important;
+  color: #c4b5fd !important;
+}
+
+#pip-dispatch-modal .dispatch-stars {
+  position: absolute !important;
+  inset: 0 !important;
+  pointer-events: none !important;
+  overflow: hidden !important;
+}
+
+.dispatch-star-particle {
+  position: absolute !important;
+  font-size: 1rem !important;
+  animation: dispatch-star-float 2s ease-out forwards !important;
+  pointer-events: none !important;
+}
+
+@keyframes dispatch-star-float {
+  0%   { opacity: 1; transform: translateY(0) rotate(0); }
+  100% { opacity: 0; transform: translateY(-80px) rotate(360deg); }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   7. SCROLL STORY — one-by-one highlight
+   ═══════════════════════════════════════════════════════════════ */
+.story-scene {
+  transition: all 0.5s ease !important;
+  opacity: 0.45 !important;
+  transform: translateX(-15px) !important;
+}
+
+.story-scene.scene-active {
+  opacity: 1 !important;
+  transform: translateX(0) !important;
+}
+
+.story-scene.scene-active .scene-card {
+  border-color: rgba(251,191,36,0.6) !important;
+  box-shadow: 0 0 24px rgba(251,191,36,0.2), 0 4px 32px rgba(0,0,0,0.4) !important;
+  background: linear-gradient(135deg, rgba(251,191,36,0.05), rgba(139,92,246,0.08)) !important;
+}
+
+.story-scene.scene-active .scene-number {
+  background: #fbbf24 !important;
+  color: #0d1127 !important;
+  box-shadow: 0 0 16px rgba(251,191,36,0.7) !important;
+}
+
+.story-scene.scene-visited {
+  opacity: 0.7 !important;
+  transform: translateX(0) !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   8. VOICE TALK BUTTON — listening state
+   ═══════════════════════════════════════════════════════════════ */
+#voice-talk-btn.voice-listening {
+  background: rgba(239, 68, 68, 0.25) !important;
+  border-color: #ef4444 !important;
+  box-shadow: 0 0 20px rgba(239,68,68,0.4) !important;
+  animation: mic-pulse 1s ease-in-out infinite !important;
+}
+
+@keyframes mic-pulse {
+  0%,100% { box-shadow: 0 0 20px rgba(239,68,68,0.4); }
+  50%      { box-shadow: 0 0 40px rgba(239,68,68,0.8); }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   9. LANTERN COLOR SWATCHES — interactive feedback
+   ═══════════════════════════════════════════════════════════════ */
+.swatch-btn {
+  cursor: pointer !important;
+  transition: all 0.25s ease !important;
+}
+
+.swatch-btn:hover,
+.swatch-btn.active {
+  transform: translateY(-3px) !important;
+}
+
+/* Lantern glow colors */
+.lamp-ambient-glow[data-color="amber"] {
+  background: radial-gradient(ellipse, rgba(251,191,36,0.45) 0%, transparent 70%) !important;
+}
+.lamp-ambient-glow[data-color="moonlight"] {
+  background: radial-gradient(ellipse, rgba(167,139,250,0.45) 0%, transparent 70%) !important;
+}
+.lamp-ambient-glow[data-color="aurora"] {
+  background: radial-gradient(ellipse, rgba(52,211,153,0.45) 0%, transparent 70%) !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   10. SPEECH BUBBLE — better animation
+   ═══════════════════════════════════════════════════════════════ */
+#companion-speech-bubble {
+  animation: bubble-float 3s ease-in-out infinite !important;
+}
+
+@keyframes bubble-float {
+  0%,100% { transform: translateY(0); }
+  50%      { transform: translateY(-5px); }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   11. ROTATION ANGLE INDICATOR
+   ═══════════════════════════════════════════════════════════════ */
+#pip-angle-indicator {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(13,10,46,0.8);
+  border: 1px solid rgba(251,191,36,0.3);
+  border-radius: 12px;
+  padding: 3px 10px;
+  font-size: 0.7rem;
+  color: #fbbf24;
+  font-family: 'Space Mono', monospace;
+  pointer-events: none;
+  z-index: 30;
+  letter-spacing: 1px;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   12. NIGHTCAP FILTER TRANSITION on Pip image
+   ═══════════════════════════════════════════════════════════════ */
+#companion-pip-img.nightcap-transition {
+  transition: filter 0.4s ease !important;
+}

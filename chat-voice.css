@@ -1,0 +1,108 @@
+
+/* ══ MIC BUTTON ════════════════════════════════════════════════════════════ */
+.mic-button {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 2px solid rgba(167,139,250,.5);
+  background: rgba(16,12,36,.85);
+  color: #f5f0ff;
+  font-size: 1.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all .22s ease;
+  box-shadow: 0 4px 14px rgba(0,0,0,.3);
+  margin-right: .4rem;
+}
+.mic-button:hover {
+  border-color: #a78bfa;
+  background: rgba(167,139,250,.2);
+  transform: scale(1.08);
+}
+.mic-button.mic-active {
+  background: linear-gradient(135deg, rgba(220,38,38,.8), rgba(185,28,28,.9)) !important;
+  border-color: #ef4444 !important;
+  animation: micPulse .8s ease-in-out infinite alternate;
+  box-shadow: 0 0 20px rgba(239,68,68,.55) !important;
+}
+@keyframes micPulse {
+  0%  { box-shadow: 0 0 12px rgba(239,68,68,.55); transform: scale(1); }
+  100%{ box-shadow: 0 0 28px rgba(239,68,68,.8);  transform: scale(1.08); }
+}
+
+/* Mic status text */
+.mic-status-text {
+  font-family: var(--font-heading,'Fredoka',sans-serif);
+  font-size: .82rem;
+  font-weight: 600;
+  color: #fbbf24;
+  flex: 1;
+  text-align: center;
+  animation: micStatusPulse 1.2s ease-in-out infinite alternate;
+}
+@keyframes micStatusPulse {
+  0%  { opacity: .7; }
+  100%{ opacity: 1; }
+}
+
+/* ══ RETURNING VISITOR BANNER ══════════════════════════════════════════════ */
+.returning-visitor-banner {
+  margin: .6rem 0 .4rem;
+  padding: .6rem 1.2rem;
+  background: linear-gradient(135deg, rgba(251,191,36,.18), rgba(245,158,11,.12));
+  border: 1.5px solid rgba(251,191,36,.45);
+  border-radius: 16px;
+  font-family: var(--font-heading,'Fredoka',sans-serif);
+  font-size: .9rem;
+  font-weight: 600;
+  color: #fbbf24;
+  text-align: center;
+  animation: bannerSlide .4s ease-out;
+}
+.returning-visitor-banner.hidden { display: none !important; }
+@keyframes bannerSlide {
+  from { opacity:0; transform: translateY(-8px); }
+  to   { opacity:1; transform: translateY(0); }
+}
+
+/* ══ VOICE STATUS BADGE ════════════════════════════════════════════════════ */
+.voice-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  padding: .3rem .9rem;
+  border-radius: 20px;
+  font-size: .82rem;
+  font-weight: 600;
+  font-family: var(--font-heading,'Fredoka',sans-serif);
+  color: #fff;
+  background: linear-gradient(135deg, rgba(251,191,36,.85), rgba(245,158,11,.9));
+  box-shadow: 0 4px 16px rgba(251,191,36,.4);
+  animation: speakingPulse 1.2s ease-in-out infinite alternate;
+  white-space: nowrap;
+}
+.voice-status-badge.hidden { display: none !important; }
+@keyframes speakingPulse {
+  0%  { box-shadow: 0 4px 16px rgba(251,191,36,.4); }
+  100%{ box-shadow: 0 6px 28px rgba(251,191,36,.75); }
+}
+
+/* ══ PIP AVATAR SPEAKING ANIMATION ════════════════════════════════════════ */
+.pip-av.pip-speaking {
+  animation: pipBounce .5s ease-in-out infinite alternate !important;
+  filter: drop-shadow(0 0 14px rgba(251,191,36,.85)) !important;
+}
+@keyframes pipBounce {
+  0%  { transform: scale(1) rotate(-2deg); }
+  100%{ transform: scale(1.1) rotate(2deg); }
+}
+
+/* ══ VOICE TOGGLE BUTTON ═══════════════════════════════════════════════════ */
+.voice-toggle-btn.voice-on {
+  background: linear-gradient(135deg, rgba(251,191,36,.18), rgba(245,158,11,.12)) !important;
+  border-color: rgba(251,191,36,.5) !important;
+  color: #fbbf24 !important;
+}

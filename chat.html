@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="night">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Talk with Pip — Chat with the Junior Dream Engineer at the Midnight Nursery. Track 1 for haX.baby Baby's First Website Hackathon.">
+  <meta name="theme-color" content="#0d1127">
+  <title>Talk with Pip · Midnight Nursery Dream Chat</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="assets/icon-64.png">
+
+  <!-- Google Fonts with Fallback -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Quicksand:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+  <!-- Shared Style & Chat Style -->
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="chat.css">
+  <link rel="stylesheet" href="chat-voice.css">
+</head>
+<body class="chat-page-body">
+  <!-- Sky background layer -->
+  <div class="sky-layer" aria-hidden="true">
+    <div class="stars-container" id="stars-field"></div>
+    <div class="nebula nebula-1"></div>
+    <div class="nebula nebula-2"></div>
+    <div class="nebula nebula-3"></div>
+  </div>
+
+  <!-- Header / Navigation Bar -->
+  <header class="site-header" id="top-nav">
+    <div class="header-container">
+      <a href="index.html#hero" class="brand-logo" aria-label="Back to Pip's Midnight Observatory Home">
+        <span class="brand-icon" aria-hidden="true">✨</span>
+        <div class="brand-text">
+          <span class="brand-name">Pip’s Observatory</span>
+          <span class="brand-badge">Junior Dream Eng.</span>
+        </div>
+      </a>
+
+      <!-- Desktop Nav -->
+      <nav class="nav-links" aria-label="Main Navigation">
+        <a href="index.html#hero" class="nav-link">Home</a>
+        <a href="index.html#about" class="nav-link">About Pip</a>
+        <a href="index.html#pip-360" class="nav-link">Meet Pip in 360°</a>
+        <a href="index.html#projects" class="nav-link">Dream Projects</a>
+        <a href="index.html#story" class="nav-link">Pip’s Story</a>
+        <a href="chat.html" class="nav-link active">Talk with Pip 💬</a>
+      </nav>
+
+      <!-- Action Controls: Audio & Theme -->
+      <div class="header-controls">
+        <!-- Back to Observatory Link -->
+        <a href="index.html" class="control-btn observatory-link-btn" title="Return to Main Observatory">
+          <span class="btn-icon">🌌</span>
+          <span class="btn-label">Observatory</span>
+        </a>
+
+        <!-- Sound Mute/Play Toggle (strictly OFF by default) -->
+        <button id="sound-toggle" class="control-btn" aria-label="Toggle ambient chimes and lullaby sound" title="Sound: Off (Click to enable gentle chimes)">
+          <span class="btn-icon" id="sound-icon" aria-hidden="true">🔇</span>
+          <span class="btn-label" id="sound-label">Muted</span>
+          <span class="sound-wave" aria-hidden="true">
+            <span></span><span></span><span></span>
+          </span>
+        </button>
+
+        <!-- Day / Night Mode Toggle -->
+        <button id="theme-toggle" class="control-btn" aria-label="Switch between Night and Day mode" title="Switch Day/Night mode">
+          <span class="btn-icon" id="theme-icon" aria-hidden="true">🌙</span>
+          <span class="btn-label" id="theme-label">Night</span>
+        </button>
+
+        <!-- Mobile Menu Hamburger Button -->
+        <button id="menu-toggle" class="control-btn menu-btn" aria-label="Open mobile navigation menu" aria-expanded="false" aria-controls="mobile-nav">
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Drawer Nav -->
+    <div class="mobile-nav" id="mobile-nav" aria-hidden="true">
+      <nav class="mobile-nav-inner" aria-label="Mobile Navigation">
+        <a href="index.html#hero" class="mobile-nav-link">✨ Home</a>
+        <a href="index.html#about" class="mobile-nav-link">🧸 About Pip</a>
+        <a href="index.html#pip-360" class="mobile-nav-link">🔄 Meet Pip in 360°</a>
+        <a href="index.html#projects" class="mobile-nav-link">⭐ Dream Projects</a>
+        <a href="index.html#story" class="mobile-nav-link">📖 Pip’s Journey</a>
+        <a href="chat.html" class="mobile-nav-link active">💬 Talk with Pip</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Chat Section -->
+  <main class="chat-main" id="chat-content">
+    <div class="chat-container">
+      <!-- Sidebar / Character Status Card -->
+      <aside class="chat-sidebar">
+        <div class="pip-chat-profile">
+          <div class="profile-avatar-wrap">
+            <img src="assets/pip_avatar_cloud.png" alt="Pip the Skull Baby waving from a cozy dream cloud" class="profile-avatar-img">
+            <span class="online-pulse-dot" title="Pip is currently awake in the Midnight Nursery"></span>
+          </div>
+
+          <div class="profile-info">
+            <h2 class="profile-name">Pip</h2>
+            <p class="profile-role">Junior Dream Engineer</p>
+            <span class="profile-nursery">Midnight Nursery · Shift #007</span>
+          </div>
+
+          <!-- Pip Thought Box -->
+          <div class="pip-mood-box">
+            <span class="mood-icon">💤</span>
+            <span class="mood-text" id="pip-mood-text">“Pouring stardust into dream vials... what’s on your mind?”</span>
+          </div>
+
+          <!-- Engine Status Pill -->
+          <div class="engine-badge" id="engine-badge" title="Response engine status">
+            <span class="badge-dot"></span>
+            <span id="engine-status-text">Sleepy Baby Engine Ready</span>
+          </div>
+
+          <!-- Sidebar Actions -->
+          <div class="sidebar-actions">
+            <button id="pip-voice-toggle" class="sidebar-btn voice-toggle-btn voice-on" title="Toggle Pip's voice">
+              <span>🔊</span>
+              <span>Pip Voice: ON</span>
+            </button>
+            <button id="pip-stop-speaking" class="sidebar-btn" title="Stop Pip speaking">
+              <span>⏹️</span>
+              <span>Stop Speaking</span>
+            </button>
+            <button id="clear-chat-btn" class="sidebar-btn" title="Clear current conversation">
+              <span>🧹</span>
+              <span>Restart Chat</span>
+            </button>
+            <a href="index.html#pip-360" class="sidebar-btn" title="View Pip in 360°">
+              <span>🔄</span>
+              <span>View in 360°</span>
+            </a>
+            <a href="index.html" class="sidebar-btn" title="Back to Observatory">
+              <span>🚀</span>
+              <span>Back to Top</span>
+            </a>
+          </div>
+        </div>
+      </aside>
+
+
+      <!-- Main Chat Area -->
+      <section class="chat-window" aria-label="Conversation with Pip">
+        <!-- Chat Header Banner -->
+        <div class="chat-window-header">
+          <div class="header-titles">
+            <h1 class="chat-title">Talk with Pip</h1>
+            <p class="chat-subtitle">Ask me anything, sleepy star!</p>
+          </div>
+          <div class="chat-header-actions">
+            <!-- Pip Speaking Status Badge -->
+            <span id="voice-status-badge" class="voice-status-badge hidden" aria-live="polite">
+              🔊 Pip is speaking...
+            </span>
+            <button id="quick-clear-btn" class="mini-tag-btn" title="Clear messages">Clear ↺</button>
+          </div>
+        </div>
+
+
+        <!-- Suggested Starter Questions -->
+        <div class="suggested-questions-wrap" aria-label="Suggested questions">
+          <span class="suggestions-label">✨ Click a question to ask:</span>
+          <div class="suggestions-pills" id="suggestions-pills">
+            <button class="suggestion-chip" data-question="Who are you, Pip?">Who are you, Pip? 👶</button>
+            <button class="suggestion-chip" data-question="What do you do at the Midnight Nursery?">What do you do at the Midnight Nursery? 🍼</button>
+            <button class="suggestion-chip" data-question="How do you make dreams?">How do you make dreams? ☁️</button>
+            <button class="suggestion-chip" data-question="Tell me a bedtime story.">Tell me a bedtime story 📖</button>
+            <button class="suggestion-chip" data-question="What is your favourite thing?">What is your favourite thing? ⭐</button>
+            <button class="suggestion-chip" data-question="Why do your eyes glow amber?">Why do your eyes glow amber? 💡</button>
+            <button class="suggestion-chip" data-question="Tell me a joke!">Tell me a joke! 🤭</button>
+            <button class="suggestion-chip" data-question="What happens in the Midnight Nursery?">What happens in the Midnight Nursery? 🌌</button>
+          </div>
+        </div>
+
+        <!-- Chat Message Log -->
+        <div class="chat-messages" id="chat-messages" role="log" aria-live="polite">
+          <!-- Dynamically populated by chat.js -->
+        </div>
+
+        <!-- Typing Indicator -->
+        <div class="typing-indicator" id="typing-indicator" aria-hidden="true">
+          <div class="typing-avatar">
+            <img src="assets/pip_avatar_cloud.png" alt="Pip" class="typing-img">
+          </div>
+          <div class="typing-bubble">
+            <span class="typing-text">Pip is thinking… 🌙</span>
+            <span class="typing-dots">
+              <span></span><span></span><span></span>
+            </span>
+          </div>
+        </div>
+
+        <!-- Returning Visitor Banner -->
+        <div id="returning-visitor-banner" class="returning-visitor-banner hidden" aria-live="polite"></div>
+
+        <!-- Chat Input Form -->
+        <form id="chat-form" class="chat-input-area" autocomplete="off">
+          <div class="input-wrapper">
+            <textarea
+              id="chat-input"
+              class="chat-textarea"
+              placeholder="Ask Pip a question… (e.g. Who are you, Pip?)"
+              rows="1"
+              maxlength="500"
+              aria-label="Message to Pip"
+            ></textarea>
+
+            <!-- 🎙️ MICROPHONE BUTTON — click to speak to Pip -->
+            <button type="button" id="mic-btn" class="mic-button" title="Click to speak to Pip" aria-label="Speak to Pip">
+              <span class="mic-icon-svg">🎙️</span>
+            </button>
+
+            <button type="submit" id="send-btn" class="send-button" aria-label="Send message to Pip" title="Send message (Enter)">
+              <span class="send-icon">🚀</span>
+              <span class="send-label">Send</span>
+            </button>
+          </div>
+
+          <div class="input-footer">
+            <span class="shortcut-hint"><strong>Enter</strong> to send · <strong>Shift+Enter</strong> new line · <strong>🎙️</strong> to speak</span>
+            <span id="mic-status-text" class="mic-status-text" aria-live="polite"></span>
+            <span class="char-counter" id="chat-char-counter">0 / 500</span>
+          </div>
+        </form>
+      </section>
+    </div>
+  </main>
+
+  <!-- Clear Confirmation Dialog -->
+  <dialog id="clear-confirm-modal" class="modal-dialog">
+    <div class="modal-card">
+      <h3 class="modal-title">Restart Conversation? 🧸</h3>
+      <p class="modal-text">
+        Pip will tuck away these notes into the dream archive and say hello fresh!
+      </p>
+      <div class="modal-actions">
+        <button id="confirm-clear-btn" class="btn btn-primary">Yes, Restart Chat ✨</button>
+        <button id="cancel-clear-btn" class="btn btn-secondary">Keep Chatting</button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- JavaScript -->
+  <script src="chat.js"></script>
+</body>
+</html>
